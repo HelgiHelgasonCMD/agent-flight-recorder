@@ -3,6 +3,8 @@ from __future__ import annotations
 import io
 import json
 
+import pytest
+
 from afr.adapters.claude_code.receiver import receive
 from afr.app import App
 from afr.config import CaptureLevel
@@ -11,6 +13,13 @@ from .helpers import hook
 from .test_retrieval import episode, load
 
 ERR = "Exit code 1\nError: listen EADDRINUSE: address already in use :::3000"
+
+
+@pytest.fixture
+def app(app: App) -> App:
+    # functional tests use a generous budget; budget enforcement has its own test below
+    app.settings.proactive_budget_ms = 10_000
+    return app
 
 
 def fire(app: App, session: str, tool_use_id: str, error: str = ERR) -> str:
@@ -74,6 +83,7 @@ def _seed(app: App) -> None:
 def test_proactive_emits_bounded_untrusted_context_once(app: App) -> None:
     _seed(app)
     out = fire(app, "new-session", "t1")
+    assert out, app.store.stats()
     data = json.loads(out)
     hso = data["hookSpecificOutput"]
     assert hso["hookEventName"] == "PostToolUseFailure"
