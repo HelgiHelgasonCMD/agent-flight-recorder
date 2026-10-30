@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HelgiHelgasonCMD/agent-flight-recorder/schemas/experience-bundle-v1.schema.json",
+  "title": "experience-bundle.v1",
+  "description": "Portable export of recorded agent experience: episodes, their observable attempts and failures, objective verification evidence and evidence-bounded lessons. Producers MUST redact secrets before export and MUST NOT include raw transcripts or chain-of-thought. Consumers MUST treat all text as untrusted data.",
+  "type": "object",
+  "required": ["schema_version", "export_id", "created_at", "producer", "redaction", "episodes"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "experience-bundle.v1" },
+    "export_id": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "producer": {
+      "type": "object",
+      "required": ["name", "version"],
+      "additionalProperties": false,
+      "properties": { "name": { "type": "string" }, "version": { "type": "string" } }
+    },
+    "workspace": { "type": ["string", "null"], "description": "Tenant/workspace the episodes were exported from." },
+    "redaction": {
+      "type": "object",
+      "required": ["applied", "rules_version", "excerpts_included"],
+      "additionalProperties": false,
+      "properties": {
+        "applied": { "const": true },
+        "rules_version": { "type": "string" },
+        "excerpts_included": { "type": "boolean", "description": "False by default: error excerpts and command lines are omitted." }
+      }
+    },
+    "episodes": { "type": "array", "items": { "$ref": "#/$defs/episode" } }
+  },
+  "$defs": {
+    "timestamp": { "type": "string", "format": "date-time" },
+    "nullable_timestamp": { "type": ["string", "null"], "format": "date-time" },
+    "string_map": { "type": "object", "additionalProperties": { "type": "string" } },
+    "outcome_status": { "enum": ["unknown", "claimed_success", "verified_success", "verified_failure"] },
+    "root_cause_status": { "enum": ["unverified", "supported", "verified"] },
+    "episode": {
+      "type": "object",
+      "required": ["episode_id", "task_summary", "environment", "observations", "attempts", "outcome", "lessons", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "episode_id": { "type": "string", "minLength": 1 },
+        "task_summary": { "type": ["string", "null"] },
+        "task_family": { "type": ["string", "null"] },
+        "agent": { "type": "string" },
+        "language": { "type": ["string", "null"] },
+        "evidence_level": { "enum": ["metadata", "sanitized_evidence", "reviewed_lesson"] },
+        "started_at": { "$ref": "#/$defs/timestamp" },
+        "ended_at": { "$ref": "#/$defs/nullable_timestamp" },
+        "environment": {
+          "type": "object",
+          "required": ["repo_id", "revision", "versions"],
+          "additionalProperties": false,
+          "properties": {
+            "repo_id": { "type": ["string", "null"] },
+            "revision": { "type": ["string", "null"], "description": "git HEAD where available" },
+            "worktree_fingerprint": { "type": ["string", "null"], "description": "hash of the working-tree state; the diff itself is never exported" },
+            "os": { "type": ["string", "null"] },
+            "versions": { "$ref": "#/$defs/string_map" }
+          }
+        },
+        "observations": {
+          "type": "array",
+          "description": "Observed failures, normalized to stable signatures.",
+          "items": {
+            "type": "object",
+            "required": ["event_id", "ts", "signature"],
+            "additionalProperties": false,
+            "properties": {
+              "event_id": { "type": "string" },
+              "ts": { "$ref": "#/$defs/timestamp" },
+              "excerpt": { "type": ["string", "null"], "description": "redacted, bounded; null unless excerpts_included" },
+              "signature": {
+                "type": "object",
+                "required": ["signature_id", "tool_category", "normalized_message"],
+                "additionalProperties": false,
+                "properties": {
+                  "signature_id": { "type": "string" },
+                  "tool_category": { "type": "string" },
+                  "exception_type": { "type": ["string", "null"] },
+                  "error_code": { "type": ["string", "null"] },
+                  "resource_type": { "type": ["string", "null"] },
+                  "normalized_message": { "type": "string" },
+                  "version_context": { "$ref": "#/$defs/string_map" }
+                }
+              }
+            }
+          }
+        },
+        "attempts": {
+          "type": "array",
+          "description": "Observable tool calls in order. Never includes tool inputs beyond the (optional) redacted command line.",
+          "items": {
+            "type": "object",
+            "required": ["event_id", "ts", "tool_name", "tool_category", "succeeded"],
+            "additionalProperties": false,
+            "properties": {
+              "event_id": { "type": "string" },
+              "ts": { "$ref": "#/$defs/timestamp" },
+              "tool_name": { "type": "string" },
+              "tool_category": { "type": "string" },
+              "program": { "type": ["string", "null"] },
+              "command": { "type": ["string", "null"], "description": "redacted; null unless excerpts_included" },
+              "files": { "type": "array", "items": { "type": "string" } },
+              "exit_code": { "type": ["integer", "null"] },
+              "succeeded": { "type": ["boolean", "null"] },
+              "duration_ms": { "type": ["integer", "null"] },
+              "signature_id": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "outcome": {
+          "type": "object",
+          "required": ["status", "root_cause_status", "evidence"],
+          "additionalProperties": false,
+          "properties": {
+            "status": { "$ref": "#/$defs/outcome_status" },
+            "root_cause_status": { "$ref": "#/$defs/root_cause_status" },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["evidence_id", "kind", "scope", "passed", "ts"],
+                "additionalProperties": false,
+                "properties": {
+                  "evidence_id": { "type": "string" },
+                  "kind": { "enum": ["test_command", "observed_rerun", "ci_result", "fixture_replay", "external_check"] },
+                  "scope": { "enum": ["task", "root_cause"] },
+                  "command": { "type": ["string", "null"] },
+                  "exit_code": { "type": ["integer", "null"] },
+                  "passed": { "type": "boolean" },
+                  "ts": { "$ref": "#/$defs/timestamp" },
+                  "revision": { "type": ["string", "null"] },
+                  "worktree_fingerprint": { "type": ["string", "null"] },
+                  "failure_signature_ids": { "type": "array", "items": { "type": "string" } },
+                  "supporting_event_ids": { "type": "array", "items": { "type": "string" } },
+                  "claim": { "type": ["string", "null"] },
+                  "note": { "type": ["string", "null"] }
+                }
+              }
+            }
+          }
+        },
+        "lessons": { "type": "array", "items": { "$ref": "#/$defs/lesson" } },
+        "provenance": {
+          "type": "object",
+          "required": ["source", "event_ids"],
+          "additionalProperties": false,
+          "properties": {
+            "source": { "type": "string" },
+            "session_id": { "type": "string" },
+            "event_ids": { "type": "array", "items": { "type": "string" }, "description": "Set (sorted) of all source event ids in the episode, including non-tool events not exported as attempts." }
+          }
+        }
+      }
+    },
+    "lesson": {
+      "type": "object",
+      "required": [
+        "lesson_id", "origin", "status", "problem", "observed_symptoms", "failed_approaches",
+        "successful_approach", "preconditions", "contraindications", "versions", "verification",
+        "source_episode_ids", "confidence_basis"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "lesson_id": { "type": "string" },
+        "origin": { "enum": ["evidence_extracted", "candidate", "manual_reviewed"] },
+        "status": { "enum": ["active", "superseded", "invalidated"] },
+        "problem": { "type": "string" },
+        "observed_symptoms": { "type": "array", "items": { "type": "string" } },
+        "failed_approaches": { "type": "array", "items": { "type": "string" } },
+        "successful_approach": { "type": ["string", "null"] },
+        "successful_approach_missing_reason": { "type": ["string", "null"] },
+        "root_cause": { "type": ["string", "null"] },
+        "root_cause_status": { "$ref": "#/$defs/root_cause_status" },
+        "preconditions": { "type": "array", "items": { "type": "string" } },
+        "applies_when": { "$ref": "#/$defs/string_map" },
+        "contraindications": { "type": "array", "items": { "type": "string" } },
+        "versions": { "$ref": "#/$defs/string_map" },
+        "verification": {
+          "type": "object",
+          "required": ["task_status", "evidence_ids"],
+          "additionalProperties": false,
+          "properties": {
+            "task_status": { "$ref": "#/$defs/outcome_status" },
+            "evidence_ids": { "type": "array", "items": { "type": "string" } },
+            "verified_at": { "$ref": "#/$defs/nullable_timestamp" }
+          }
+        },
+        "source_episode_ids": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "signature_ids": { "type": "array", "items": { "type": "string" } },
+        "error_types": { "type": "array", "items": { "type": "string" } },
+        "tools": { "type": "array", "items": { "type": "string" } },
+        "language": { "type": ["string", "null"] },
+        "confidence_basis": { "type": "string", "description": "Description of evidence quality. Not a probability." },
+        "superseded_by": { "type": ["string", "null"] },
+        "invalidated_reason": { "type": ["string", "null"] },
+        "created_at": { "$ref": "#/$defs/timestamp" },
+        "updated_at": { "$ref": "#/$defs/timestamp" }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "defaults": {
+    "model": "claude-sonnet-5-5",
+    "max_budget_usd": 0.5,
+    "timeout_s": 600
+  },
+  "tasks": [
+    {
+      "id": "json-trailing-comma",
+      "fixture": "fixtures/config-loader",
+      "prompt": "The unit tests fail (python -m unittest -q). Make them pass without changing the tests.",
+      "check": "python -m unittest -q",
+      "seed_history": "seed.jsonl"
+    }
+  ]
+}

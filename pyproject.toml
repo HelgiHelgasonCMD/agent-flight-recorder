@@ -1,0 +1,79 @@
+[project]
+name = "agent-flight-recorder"
+version = "0.1.0"
+description = "Flight recorder and verified-experience retrieval for coding agents"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12,<3.14"
+authors = [{ name = "Helgi Helgason" }]
+dependencies = [
+    "typer>=0.12",
+    "pydantic>=2.7",
+    "sqlalchemy>=2.0.30",
+    "alembic>=1.13",
+    "qdrant-client>=1.20,<1.21",
+    "jsonschema>=4.22",
+    "mcp>=2.3,<3",
+    "packaging>=24",
+]
+
+[project.optional-dependencies]
+dense = ["sentence-transformers>=3.0", "torch>=2.3"]
+
+[project.scripts]
+afr = "afr.cli:app"
+
+[dependency-groups]
+dev = ["pytest>=8", "pytest-timeout>=2.3", "ruff>=0.5", "mypy>=1.10", "types-jsonschema"]
+
+[tool.uv]
+default-groups = ["dev"]
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/afr"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"schemas" = "afr/_schemas"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S", "SIM", "RUF"]
+ignore = ["S101", "S603", "S607", "S311", "E501"]  # line length is left to `ruff format`
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S", "B"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+packages = ["afr"]
+mypy_path = "src"
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["qdrant_client.*", "sentence_transformers.*", "torch.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not dense'"
+timeout = 300
+markers = [
+    "dense: requires the sentence-transformers model (downloads ~90MB on first use)",
+    "qdrant_server: requires a running Qdrant server (QDRANT_URL)",
+]

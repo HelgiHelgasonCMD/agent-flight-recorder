@@ -1,0 +1,72 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  QDRANT_VERSION: v1.20.0
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+      - name: Install
+        run: uv sync --extra dense --locked
+      - name: Lint
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+      - name: Type check
+        run: uv run mypy
+      - name: Tests (embedded Qdrant)
+        run: uv run pytest -q
+      - name: Cache embedding model
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/huggingface
+          key: hf-all-MiniLM-L6-v2
+      - name: Dense-model tests
+        run: uv run pytest -q -m dense
+      - name: Demo (real embedding model)
+        run: uv run afr demo
+      - name: Retrieval benchmark (real embedding model)
+        run: uv run afr eval -o benchmark-ci.md
+      - uses: actions/upload-artifact@v7
+        with:
+          name: benchmark-ci
+          path: benchmark-ci.md
+
+  qdrant-server:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      qdrant:
+        image: qdrant/qdrant:v1.20.0
+        ports:
+          - 6333:6333
+    env:
+      AFR_TEST_QDRANT_URL: http://localhost:6333
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+      - name: Install
+        run: uv sync --locked
+      - name: Wait for Qdrant
+        run: for i in $(seq 1 30); do curl -sf http://localhost:6333/readyz && break; sleep 1; done
+      - name: Server-mode integration tests
+        run: >
+          uv run pytest -q -m "qdrant_server or not dense"
+          tests/test_qdrant_server.py tests/test_retrieval.py tests/test_export.py
+          tests/test_mcp.py tests/test_proactive.py

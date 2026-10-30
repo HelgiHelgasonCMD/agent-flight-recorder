@@ -1,0 +1,634 @@
+{
+  "episodes": {
+    "f10_git": {
+      "family": "git-merge",
+      "repo": "repo_bench_tools",
+      "ts": "2026-04-25T09:00:00+00:00"
+    },
+    "f11_rust": {
+      "family": "rust-borrow",
+      "repo": "repo_bench_tools",
+      "ts": "2026-04-30T09:00:00+00:00"
+    },
+    "f12_ts_alias": {
+      "family": "ts-module",
+      "repo": "repo_bench_web",
+      "ts": "2026-05-10T09:00:00+00:00"
+    },
+    "f12_ts_types": {
+      "family": "ts-module",
+      "repo": "repo_bench_web",
+      "ts": "2026-05-15T09:00:00+00:00"
+    },
+    "f13_utf_claim": {
+      "family": "encoding",
+      "repo": "repo_bench_api",
+      "ts": "2026-05-20T09:00:00+00:00"
+    },
+    "f13_utf_ok": {
+      "family": "encoding",
+      "repo": "repo_bench_api",
+      "ts": "2026-05-22T09:00:00+00:00"
+    },
+    "f14_jest": {
+      "family": "jest-esm",
+      "repo": "repo_bench_web",
+      "ts": "2026-05-30T09:00:00+00:00"
+    },
+    "f15_future": {
+      "family": "py-missing-module",
+      "repo": "repo_bench_api",
+      "ts": "2027-02-09T09:00:00+00:00"
+    },
+    "f1_yaml": {
+      "family": "py-missing-module",
+      "repo": "repo_bench_api",
+      "ts": "2026-01-15T09:00:00+00:00"
+    },
+    "f2_esm": {
+      "family": "node-esm",
+      "repo": "repo_bench_web",
+      "ts": "2026-01-25T09:00:00+00:00"
+    },
+    "f3_pg_auth": {
+      "family": "db-connection",
+      "repo": "repo_bench_api",
+      "ts": "2026-02-19T09:00:00+00:00"
+    },
+    "f3_pg_down": {
+      "family": "db-connection",
+      "repo": "repo_bench_api",
+      "ts": "2026-02-14T09:00:00+00:00"
+    },
+    "f3_port": {
+      "family": "port-in-use",
+      "repo": "repo_bench_web",
+      "ts": "2026-02-04T09:00:00+00:00"
+    },
+    "f4_ssl_mac": {
+      "family": "ssl-cert",
+      "repo": "repo_bench_tools",
+      "ts": "2026-02-24T09:00:00+00:00"
+    },
+    "f4_ssl_proxy": {
+      "family": "ssl-cert",
+      "repo": "repo_bench_tools",
+      "ts": "2026-03-06T09:00:00+00:00"
+    },
+    "f5_pyd_v1pin": {
+      "family": "pydantic-settings",
+      "repo": "repo_bench_api",
+      "ts": "2026-03-16T09:00:00+00:00"
+    },
+    "f5_pyd_v2": {
+      "family": "pydantic-settings",
+      "repo": "repo_bench_api",
+      "ts": "2026-05-05T09:00:00+00:00"
+    },
+    "f6_eresolve_new": {
+      "family": "npm-peer-deps",
+      "repo": "repo_bench_web",
+      "ts": "2026-05-25T09:00:00+00:00"
+    },
+    "f6_eresolve_old": {
+      "family": "npm-peer-deps",
+      "repo": "repo_bench_web",
+      "ts": "2024-11-11T09:00:00+00:00"
+    },
+    "f7_mocker_bad": {
+      "family": "pytest-plugins",
+      "repo": "repo_bench_api",
+      "ts": "2026-03-26T09:00:00+00:00"
+    },
+    "f7_mocker_ok": {
+      "family": "pytest-plugins",
+      "repo": "repo_bench_api",
+      "ts": "2026-03-28T09:00:00+00:00"
+    },
+    "f8_docker": {
+      "family": "docker-perms",
+      "repo": "repo_bench_tools",
+      "ts": "2026-04-05T09:00:00+00:00"
+    },
+    "f9_stubs": {
+      "family": "mypy-stubs",
+      "repo": "repo_bench_api",
+      "ts": "2026-04-15T09:00:00+00:00"
+    },
+    "n_alembic": {
+      "family": "migrations",
+      "repo": "repo_bench_api",
+      "ts": "2026-06-09T09:00:00+00:00"
+    },
+    "n_flake": {
+      "family": "lint",
+      "repo": "repo_bench_api",
+      "ts": "2026-06-04T09:00:00+00:00"
+    },
+    "n_go": {
+      "family": "go-mod",
+      "repo": "repo_bench_api",
+      "ts": "2026-06-08T09:00:00+00:00"
+    },
+    "n_keyerror": {
+      "family": "config",
+      "repo": "repo_bench_api",
+      "ts": "2026-06-10T09:00:00+00:00"
+    },
+    "n_oom": {
+      "family": "memory",
+      "repo": "repo_bench_api",
+      "ts": "2026-06-05T09:00:00+00:00"
+    },
+    "n_perm": {
+      "family": "fs-perms",
+      "repo": "repo_bench_api",
+      "ts": "2026-06-07T09:00:00+00:00"
+    },
+    "n_recursion": {
+      "family": "serialization",
+      "repo": "repo_bench_api",
+      "ts": "2026-06-11T09:00:00+00:00"
+    },
+    "n_timeout": {
+      "family": "network",
+      "repo": "repo_bench_api",
+      "ts": "2026-06-06T09:00:00+00:00"
+    }
+  },
+  "generated_by": "benchmarks/build_corpus.py",
+  "queries": [
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "exact_repeat",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_api",
+        "versions": {
+          "python": "3.12.3"
+        }
+      },
+      "family": "py-missing-module",
+      "id": "q01",
+      "qrels": {
+        "f1_yaml": 2
+      },
+      "query": "ModuleNotFoundError: No module named 'yaml'",
+      "split": "dev",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "exact_repeat",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_web"
+      },
+      "family": "node-esm",
+      "id": "q02",
+      "qrels": {
+        "f2_esm": 2
+      },
+      "query": "Error [ERR_REQUIRE_ESM]: require() of ES Module /srv/web/node_modules/node-fetch/src/index.js not supported.",
+      "split": "dev",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "exact_repeat",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_web"
+      },
+      "family": "port-in-use",
+      "id": "q03",
+      "qrels": {
+        "f3_port": 2
+      },
+      "query": "Error: listen EADDRINUSE: address already in use :::3000",
+      "split": "dev",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "exact_repeat",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_api"
+      },
+      "family": "mypy-stubs",
+      "id": "q04",
+      "qrels": {
+        "f9_stubs": 2
+      },
+      "query": "error: Library stubs not installed for \"requests\"  [import-untyped]",
+      "split": "test",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "exact_repeat",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_tools"
+      },
+      "family": "rust-borrow",
+      "id": "q05",
+      "qrels": {
+        "f11_rust": 2
+      },
+      "query": "error[E0502]: cannot borrow `queue` as mutable because it is also borrowed as immutable",
+      "split": "test",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "exact_repeat",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_tools"
+      },
+      "family": "git-merge",
+      "id": "q06",
+      "qrels": {
+        "f10_git": 2
+      },
+      "query": "fatal: refusing to merge unrelated histories",
+      "split": "test",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "paraphrase",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_api"
+      },
+      "family": "py-missing-module",
+      "id": "q07",
+      "qrels": {
+        "f1_yaml": 2
+      },
+      "query": "the test suite crashes on import because the YAML parsing library is not installed",
+      "split": "dev",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "paraphrase",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_tools"
+      },
+      "family": "docker-perms",
+      "id": "q08",
+      "qrels": {
+        "f8_docker": 2
+      },
+      "query": "my user is not allowed to talk to the docker daemon socket when building images",
+      "split": "test",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "paraphrase",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_tools"
+      },
+      "family": "git-merge",
+      "id": "q09",
+      "qrels": {
+        "f10_git": 2
+      },
+      "query": "combine two repositories that were created independently into one history",
+      "split": "test",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "paraphrase",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_web"
+      },
+      "family": "jest-esm",
+      "id": "q10",
+      "qrels": {
+        "f14_jest": 2
+      },
+      "query": "jest chokes on ES module import syntax in test files",
+      "split": "test",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "paraphrase",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_web"
+      },
+      "family": "port-in-use",
+      "id": "q11",
+      "qrels": {
+        "f3_port": 2
+      },
+      "query": "dev server will not start because something is already listening on its port",
+      "split": "dev",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "paraphrase",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_tools"
+      },
+      "family": "rust-borrow",
+      "id": "q12",
+      "qrels": {
+        "f11_rust": 2
+      },
+      "query": "borrow checker complains when I push to a vec while holding a reference to its last element",
+      "split": "test",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "stale_fix",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_web",
+        "versions": {
+          "npm": "10.8.1"
+        }
+      },
+      "family": "npm-peer-deps",
+      "id": "q13",
+      "qrels": {
+        "f6_eresolve_new": 2,
+        "f6_eresolve_old": 1
+      },
+      "query": "npm ERR! code ERESOLVE unable to resolve dependency tree peer react from react-beautiful-dnd",
+      "split": "test",
+      "traps": {
+        "f6_eresolve_old": [
+          "stale",
+          "version_mismatch"
+        ]
+      }
+    },
+    {
+      "as_of": "2026-04-15T09:00:00+00:00",
+      "case": "stale_fix",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_web",
+        "versions": {
+          "npm": "10.5.0"
+        }
+      },
+      "family": "npm-peer-deps",
+      "id": "q14",
+      "qrels": {
+        "f6_eresolve_old": 2
+      },
+      "query": "npm install fails with ERESOLVE peer dependency conflict",
+      "split": "test",
+      "traps": {
+        "f6_eresolve_old": [
+          "stale",
+          "version_mismatch"
+        ]
+      }
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "misleading_prior_failure",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_api"
+      },
+      "family": "pytest-plugins",
+      "id": "q15",
+      "qrels": {
+        "f7_mocker_bad": 1,
+        "f7_mocker_ok": 2
+      },
+      "query": "E       fixture 'mocker' not found",
+      "split": "test",
+      "traps": {
+        "f7_mocker_bad": [
+          "failed_attempt"
+        ]
+      }
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "misleading_prior_failure",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_api"
+      },
+      "family": "encoding",
+      "id": "q16",
+      "qrels": {
+        "f13_utf_claim": 1,
+        "f13_utf_ok": 2
+      },
+      "query": "UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte",
+      "split": "test",
+      "traps": {
+        "f13_utf_claim": [
+          "unverified",
+          "no_lesson"
+        ]
+      }
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "version_mismatch",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_api",
+        "versions": {
+          "pydantic": "2.8.2",
+          "python": "3.12.3"
+        }
+      },
+      "family": "pydantic-settings",
+      "id": "q17",
+      "qrels": {
+        "f5_pyd_v2": 2
+      },
+      "query": "ImportError: cannot import name 'BaseSettings' from 'pydantic'",
+      "split": "dev",
+      "traps": {
+        "f5_pyd_v1pin": [
+          "version_mismatch"
+        ]
+      }
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "version_mismatch",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_api",
+        "versions": {
+          "pydantic": "1.10.15",
+          "python": "3.11.8"
+        }
+      },
+      "family": "pydantic-settings",
+      "id": "q18",
+      "qrels": {
+        "f5_pyd_v1pin": 2
+      },
+      "query": "BaseSettings import error from pydantic",
+      "split": "dev",
+      "traps": {
+        "f5_pyd_v2": [
+          "version_mismatch"
+        ]
+      }
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "different_root_cause",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_tools"
+      },
+      "family": "ssl-cert",
+      "id": "q19",
+      "qrels": {
+        "f4_ssl_proxy": 2
+      },
+      "query": "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate",
+      "split": "test",
+      "traps": {
+        "f4_ssl_mac": [
+          "precondition_mismatch"
+        ]
+      }
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "different_root_cause",
+      "context": {
+        "os": "darwin",
+        "repo_id": "repo_bench_tools"
+      },
+      "family": "ssl-cert",
+      "id": "q20",
+      "qrels": {
+        "f4_ssl_mac": 2
+      },
+      "query": "certificate verify failed: unable to get local issuer certificate when downloading with urllib",
+      "split": "test",
+      "traps": {
+        "f4_ssl_proxy": [
+          "precondition_mismatch"
+        ]
+      }
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "different_root_cause",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_api"
+      },
+      "family": "db-connection",
+      "id": "q21",
+      "qrels": {
+        "f3_pg_down": 2
+      },
+      "query": "psycopg.OperationalError: connection to server at \"127.0.0.1\", port 5432 failed: Connection refused",
+      "split": "dev",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "different_root_cause",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_api"
+      },
+      "family": "db-connection",
+      "id": "q22",
+      "qrels": {
+        "f3_pg_auth": 2
+      },
+      "query": "FATAL: password authentication failed for user \"app\"",
+      "split": "dev",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "different_root_cause",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_web"
+      },
+      "family": "ts-module",
+      "id": "q23",
+      "qrels": {
+        "f12_ts_types": 2
+      },
+      "query": "error TS7016: Could not find a declaration file for module 'date-fns'",
+      "split": "test",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "different_root_cause",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_web"
+      },
+      "family": "ts-module",
+      "id": "q24",
+      "qrels": {
+        "f12_ts_alias": 2
+      },
+      "query": "error TS2307: Cannot find module '@/lib/api' or its corresponding type declarations.",
+      "split": "test",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "exact_repeat",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_api"
+      },
+      "family": "jest-esm",
+      "id": "q25",
+      "qrels": {
+        "f14_jest": 2
+      },
+      "query": "SyntaxError: Cannot use import statement outside a module",
+      "split": "test",
+      "traps": {}
+    },
+    {
+      "as_of": "2026-07-24T09:00:00+00:00",
+      "case": "exact_repeat",
+      "context": {
+        "os": "linux",
+        "repo_id": "repo_bench_api"
+      },
+      "family": "py-missing-module",
+      "id": "q26",
+      "qrels": {
+        "f1_yaml": 2
+      },
+      "query": "ModuleNotFoundError: No module named 'yaml' on the new runner image",
+      "split": "test",
+      "traps": {}
+    }
+  ],
+  "workspace": "bench"
+}

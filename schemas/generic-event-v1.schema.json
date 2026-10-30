@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HelgiHelgasonCMD/agent-flight-recorder/schemas/generic-event-v1.schema.json",
+  "title": "afr.generic-event.v1",
+  "description": "One line of a generic agent event stream (JSONL). Text fields are treated as untrusted data and are redacted and size-bounded on import.",
+  "type": "object",
+  "required": ["schema", "event_id", "ts", "session_id", "agent", "kind"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "afr.generic-event.v1" },
+    "event_id": { "type": "string", "minLength": 1, "maxLength": 200, "description": "Stable unique id; re-importing the same id is a no-op." },
+    "ts": { "type": "string", "format": "date-time" },
+    "session_id": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "episode_id": { "type": "string", "minLength": 1, "maxLength": 200, "description": "Explicit task-attempt grouping. If absent, episodes are inferred from prompt/stop boundaries." },
+    "agent": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "kind": {
+      "enum": ["session_start", "prompt", "tool_result", "tool_failure", "stop", "session_end", "verification", "lesson"]
+    },
+    "workspace": { "type": "string", "maxLength": 200, "description": "Tenant/workspace boundary. Defaults to the importer's workspace." },
+    "repo": { "type": "string", "maxLength": 200, "description": "Opaque repository identifier." },
+    "cwd": { "type": "string", "maxLength": 1000 },
+    "task_summary": { "type": "string", "maxLength": 4000 },
+    "task_family": { "type": "string", "maxLength": 200 },
+    "language": { "type": "string", "maxLength": 50 },
+    "versions": { "type": "object", "additionalProperties": { "type": "string", "maxLength": 100 } },
+    "git_head": { "type": "string", "maxLength": 64 },
+    "tool": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "command": { "type": "string", "maxLength": 20000 },
+        "exit_code": { "type": "integer" },
+        "files": { "type": "array", "items": { "type": "string", "maxLength": 1000 }, "maxItems": 200 },
+        "duration_ms": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "error": { "type": "string", "maxLength": 200000 },
+    "assistant_claim": { "type": "string", "maxLength": 20000, "description": "Final agent message. Only a boolean 'success claimed' flag is kept." },
+    "verification": {
+      "type": "object",
+      "required": ["kind", "passed"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["test_command", "observed_rerun", "ci_result", "fixture_replay", "external_check"] },
+        "scope": { "enum": ["task", "root_cause"], "default": "task" },
+        "command": { "type": "string", "maxLength": 2000 },
+        "exit_code": { "type": "integer" },
+        "passed": { "type": "boolean" },
+        "claim": { "type": "string", "maxLength": 2000, "description": "For root_cause scope: the explanation the check discriminates." },
+        "lesson_id": { "type": "string" },
+        "note": { "type": "string", "maxLength": 2000 }
+      }
+    },
+    "lesson": {
+      "type": "object",
+      "required": ["problem"],
+      "additionalProperties": false,
+      "properties": {
+        "lesson_id": { "type": "string", "maxLength": 200 },
+        "problem": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "observed_symptoms": { "type": "array", "items": { "type": "string", "maxLength": 2000 } },
+        "failed_approaches": { "type": "array", "items": { "type": "string", "maxLength": 2000 } },
+        "successful_approach": { "type": ["string", "null"], "maxLength": 4000 },
+        "root_cause": { "type": ["string", "null"], "maxLength": 2000 },
+        "root_cause_status": { "enum": ["unverified", "supported", "verified"] },
+        "preconditions": { "type": "array", "items": { "type": "string", "maxLength": 1000 } },
+        "applies_when": { "type": "object", "additionalProperties": { "type": "string", "maxLength": 200 } },
+        "contraindications": { "type": "array", "items": { "type": "string", "maxLength": 1000 } },
+        "versions": { "type": "object", "additionalProperties": { "type": "string", "maxLength": 100 } },
+        "supersedes": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "allOf": [
+    { "if": { "properties": { "kind": { "const": "verification" } } }, "then": { "required": ["verification", "episode_id"] } },
+    { "if": { "properties": { "kind": { "const": "lesson" } } }, "then": { "required": ["lesson", "episode_id"] } },
+    { "if": { "properties": { "kind": { "enum": ["tool_result", "tool_failure"] } } }, "then": { "required": ["tool"] } },
+    { "if": { "properties": { "kind": { "const": "tool_failure" } } }, "then": { "required": ["error"] } }
+  ]
+}
